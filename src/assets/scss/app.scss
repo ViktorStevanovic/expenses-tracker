@@ -1,0 +1,11 @@
+@use './partials/variables' as *;
+@use './partials/mixins' as *;
+
+*{
+    @include reset;
+   
+}
+
+body{
+    background-color: rgb(236, 236, 236) !important;
+}
