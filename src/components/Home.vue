@@ -8,14 +8,14 @@
                     </div>
                     <div class="text-center py-5 my-5">
                         <p>Spent this month</p>
-                        <h1 class="text-danger">-654.00$</h1>
+                        <h1 class="text-danger">-{{ totalMonthExpenses }}</h1>
                     </div>
                 </section>
                 <!-- Middle-part -->
                 <section>
                     <div class="d-flex justify-content-between">
                         <p>Today</p>
-                        <p>-654.00$</p>
+                        <p>{{ totalDayExpenses }}</p>
                     </div>
                     <!-- List of expenses -->
                     <div v-for="(expense, index) in expenses" class="d-flex flex-column mb-2">
@@ -53,6 +53,28 @@ export default {
             expenses: [],
         }
     },
+    computed: {
+        totalMonthExpenses() {
+        const currentMonth = (new Date()).getMonth();
+        return this.expenses.reduce((total, expense) => {
+            const expenseMonth = (new Date(expense.created_at)).getMonth();
+            if (expenseMonth === currentMonth) {
+                total += parseFloat(expense.amount); // Convert string to float
+            }
+            return total;
+        }, 0);
+    },
+    totalDayExpenses() {
+        const currentDate = new Date().toDateString();
+        return this.expenses.reduce((total, expense) => {
+            const expenseDate = new Date(expense.created_at).toDateString();
+            if (expenseDate === currentDate) {
+                total += parseFloat(expense.amount); // Convert string to float
+            }
+            return total;
+        }, 0);
+    },
+    },
     methods: {
         getExpenses() {
                 axios.get('http://127.0.0.1:8000/api/expenses')
@@ -64,7 +86,18 @@ export default {
                     console.log(error);
                 });
             },
-    },
+            isCurrentMonth(created_at) {
+                const date = new Date(created_at);
+                const currentDate = new Date();
+                return date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
+            },
+            // Check if the provided date is today
+            isCurrentDay(created_at) {
+                const date = new Date(created_at);
+                const currentDate = new Date();
+                return date.toDateString() === currentDate.toDateString();
+            }
+        },
     created() {
         this.getExpenses();
     },
