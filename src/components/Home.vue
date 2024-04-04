@@ -18,42 +18,19 @@
                         <p>-654.00$</p>
                     </div>
                     <!-- List of expenses -->
-                    <div class="d-flex flex-column mb-2">
+                    <div v-for="(expense, index) in expenses" class="d-flex flex-column mb-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex">
                                 <img src="" alt="">
                                 <div>
-                                    <p class="fw-bold m-0">Gas</p>
-                                    <p class="m-0">02:05pm</p>
+                                    <p class="fw-bold m-0">{{expense.category.name}}</p>
+                                    <p class="m-0">{{expense.created_at.substring(11, 16)}} PM</p>
                                 </div>
                             </div>
-                            <p class="text-danger m-0">-10$</p>
+                            <p class="text-danger m-0">{{expense.amount}} $</p>
                         </div>
                     </div>
-                    <div class="d-flex flex-column mb-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
-                                <img src="" alt="">
-                                <div>
-                                    <p class="fw-bold m-0">Gas</p>
-                                    <p class="m-0">02:05pm</p>
-                                </div>
-                            </div>
-                            <p class="text-danger m-0">-10$</p>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column mb-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
-                                <img src="" alt="">
-                                <div>
-                                    <p class="fw-bold m-0">Gas</p>
-                                    <p class="m-0">02:05pm</p>
-                                </div>
-                            </div>
-                            <p class="text-danger m-0">-10$</p>
-                        </div>
-                    </div>
+                    
                 </section>
                 <!-- Footer -->
                 <section>
@@ -74,7 +51,6 @@ export default {
     data() {
         return {
             expenses: [],
-            
         }
     },
     methods: {
@@ -82,7 +58,7 @@ export default {
                 axios.get('http://127.0.0.1:8000/api/expenses')
                 .then( response => {
                     console.log(response.data.results);
-                    // this.expenses = response.data.results;
+                    this.expenses = response.data.results;
                 })
                 .catch(function (error) {
                     console.log(error);
