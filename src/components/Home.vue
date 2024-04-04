@@ -68,8 +68,30 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
     name: 'Home',
+    data() {
+        return {
+            expenses: [],
+            
+        }
+    },
+    methods: {
+        getExpenses() {
+                axios.get('http://127.0.0.1:8000/api/expenses')
+                .then( response => {
+                    console.log(response.data.results);
+                    // this.expenses = response.data.results;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+    },
+    created() {
+        this.getExpenses();
+    },
 }
 </script>
 <style lang="scss">
