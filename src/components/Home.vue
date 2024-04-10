@@ -8,24 +8,24 @@
                     </div>
                     <div class="text-center py-5 my-5">
                         <p>Spent this month</p>
-                        <h1 class="text-danger">-{{ totalMonthExpenses }}</h1>
+                        <h1 class="text-danger">-{{ totalMonthExpenses }}$</h1>
                     </div>
                 </section>
                 <!-- Middle-part -->
                 <section class="overflow-auto">
                     <div class="d-flex justify-content-between">
                         <p>Today</p>
-                        <p>{{ totalDayExpenses }}</p>
+                        <p>{{ totalDayExpenses }} $</p>
                     </div>
                     <!-- List of expenses -->
                     <section >
-                        <div v-for="(expense, index) in expenses" class="d-flex flex-column mb-2">
+                        <div v-for="(expense, index) in todayExpenses" class="d-flex flex-column mb-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex">
                                     <img src="" alt="">
                                     <div>
                                         <p class="fw-bold m-0">{{expense.category.name}}</p>
-                                        <p class="m-0">{{expense.created_at.substring(11, 16)}} PM</p>
+                                        <p class="m-0">Time: {{expense.created_at.substring(11, 16)}}</p>
                                     </div>
                                 </div>
                                 <p class="text-danger m-0">{{expense.amount}} $</p>
@@ -51,13 +51,20 @@
                                             <input type="number" class="form-control" v-model="amount" id="amount" name="amount" value="{{ $expense.amount }}" placeholder="0">
                                             <label for="amount">Oh god, again?</label>
                                         </div>
+                                        <label for="category_id" class="form-label my-text-primary fs-6 my-text-primary">Category</label>
+                                        <select name="category_id" id="category_id" v-model="category_id" class="form-select">
+                                            <option selected>Scegli una Categoria</option>
+                                            <option v-for="(category, index) in categories" :value="category.id">
+                                                {{category.name}}
+                                            </option>
+                                        </select>
                                         <button @click="addExpense">Add Expense</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                           
-                            <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Open first modal</button>
+                            <button class="btn btn-warning" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">+</button>
                             
                         <a href="">Change logs</a>
                     </div>
@@ -73,14 +80,15 @@ export default {
     data() {
         return {
             expenses: [],
+            todayExpenses: [],
+            categories: [],
             currentDate: '',
             amount: '',
-            category_id: 1,
-            date: '2023-01-02'
+            category_id: 0,
         }
     },
     computed: {
-        totalMonthExpenses() {
+    totalMonthExpenses() {
         const currentMonth = (new Date()).getMonth();
         return this.expenses.reduce((total, expense) => {
             const expenseMonth = (new Date(expense.created_at)).getMonth();
@@ -102,16 +110,34 @@ export default {
     },
     },
     methods: {
-        getExpenses() {
-                axios.get('http://127.0.0.1:8000/api/expenses')
+        getCategories() {
+                axios.get('http://127.0.0.1:8000/api/categories')
                 .then( response => {
                     console.log(response.data.results);
-                    this.expenses = response.data.results;
+                    this.categories = response.data.results;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
+        getExpenses() {
+                axios.get('http://127.0.0.1:8000/api/expenses')
+                .then( response => {
+                    console.log(response.data.results);
+                    this.expenses = response.data.results;
+                    this.todayExpenses = this.todayExpenses = this.expenses.filter(expense => this.isToday(expense.created_at));
+                    console.log(this.todayExpenses);
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            isToday(created_at) {
+                const today = new Date().toISOString().slice(0, 10);
+                return created_at.slice(0, 10) === today;
+            },
+            
             isCurrentMonth(created_at) {
                 const date = new Date(created_at);
                 const currentDate = new Date();
@@ -125,11 +151,18 @@ export default {
             },
 
         addExpense() {
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
+            const day = String(currentDate.getDate()).padStart(2, '0'); // Add leading zero if needed
+
+            // Format the current date as 'YYYY-MM-DD'
+            const formattedDate = `${year}-${month}-${day}`;
             // Prepare the data object with the necessary fields
             const data = {
                 amount: this.amount,
                 category_id: this.category_id,
-                date: this.date
+                date: formattedDate,
             };
 
             // Make an API POST request to the Laravel backend
@@ -137,8 +170,10 @@ export default {
                 .then(response => {
                     // Handle successful response
                     console.log(response.data);
+                    console.log(this.date);
                     // Optionally, you can reset the form fields after successful submission
                     this.amount = '';
+                    this.category_id = '';
                   
                     this.getExpenses();
                 })
@@ -160,6 +195,7 @@ export default {
 },
     created() {
         this.getExpenses();
+        this.getCategories()
     },
 }
 </script>
