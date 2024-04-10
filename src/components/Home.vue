@@ -1,21 +1,21 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-5 bg-white py-4 px-3 my-card d-flex flex-column justify-content-between rounded-4">
-                <section>
-                    <div>
-                        <h3 class="text-center">Expenses</h3>
-                    </div>
+            <div class="col-5 bg-white px-3  d-flex flex-column justify-content-evenly rounded-4">
+                <div class="my-smallest pt-4">
+                    <h3 class="text-center color">Expenses</h3>
+                </div>
+                <section class="d-flex flex-column justify-content-center align-items-center my-card">
                     <div class="text-center py-5 my-5">
-                        <p>Spent this month</p>
-                        <h1 class="text-danger">-{{ totalMonthExpenses }}$</h1>
+                        <p class="text-secondary fs-5 m-0">Spent this month</p>
+                        <h1 class="text-danger zilla-slab-regular">-{{ totalMonthExpenses }}$</h1>
                     </div>
                 </section>
                 <!-- Middle-part -->
-                <section class="overflow-auto">
+                <section class="overflow-auto my-medium">
                     <div class="d-flex justify-content-between">
-                        <p>Today</p>
-                        <p>{{ totalDayExpenses }} $</p>
+                        <p class="text-secondary">Today</p>
+                        <p class="text-secondary">{{ totalDayExpenses }} $</p>
                     </div>
                     <!-- List of expenses -->
                     <section >
@@ -24,8 +24,8 @@
                                 <div class="d-flex">
                                     <img src="" alt="">
                                     <div>
-                                        <p class="fw-bold m-0">{{expense.category.name}}</p>
-                                        <p class="m-0">Time: {{expense.created_at.substring(11, 16)}}</p>
+                                        <p class="fw-bold m-0 color">{{expense.category.name}}</p>
+                                        <p class="m-0 text-secondary">{{expense.created_at.substring(11, 16)}} </p>
                                     </div>
                                 </div>
                                 <p class="text-danger m-0">{{expense.amount}} $</p>
@@ -36,7 +36,7 @@
                 </section>
                 <!-- Footer -->
                 <section>
-                    <div class="border-top d-flex justify-content-between pt-3">
+                    <div class="border-top d-flex justify-content-between align-items-center my-small">
                         <a class="m-0" href="">Analytics</a>
                         <!-- Modal for adding expenses -->
                         <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
@@ -47,26 +47,26 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                      <div class="modal-body">
-                                        <div class="form-floating mb-3">
+                                        <div class=" mb-3">
+                                            <label for="amount" class="mb-1">Amount</label>
                                             <input type="number" class="form-control" v-model="amount" id="amount" name="amount" value="{{ $expense.amount }}" placeholder="0">
-                                            <label for="amount">Oh god, again?</label>
                                         </div>
-                                        <label for="category_id" class="form-label my-text-primary fs-6 my-text-primary">Category</label>
-                                        <select name="category_id" id="category_id" v-model="category_id" class="form-select">
-                                            <option selected>Scegli una Categoria</option>
-                                            <option v-for="(category, index) in categories" :value="category.id">
-                                                {{category.name}}
-                                            </option>
-                                        </select>
-                                        <button @click="addExpense">Add Expense</button>
+                                        <div class="mb-4">
+                                            <label for="category_id" class="form-label my-text-primary fs-6 my-text-primary">Category</label>
+                                            <select name="category_id" id="category_id" v-model="category_id" class="form-select p-2">
+                                                <option selected>Scegli una Categoria</option>
+                                                <option v-for="(category, index) in categories" :value="category.id">
+                                                    {{category.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" @click="addExpense">Add Expense</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                          
-                            <button class="btn btn-warning" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">+</button>
-                            
-                        <a href="">Change logs</a>
+                        <button class="btn text-danger fs-4" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">+</button>                            
+                        <a href="">...</a>
                     </div>
                 </section>
             </div>
@@ -200,11 +200,32 @@ export default {
 }
 </script>
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab&display=swap');
+
    .my-card{
-    height: 100vh;
+    height: 48vh;
    };
+   .my-medium{
+    height: 40vh;
+   }
+   .my-small{
+    height: 7vh;
+   }
+   .my-smallest{
+    height: 5vh;
+   }
    .overflow-auto::-webkit-scrollbar {
     display: none; /* Hide the scrollbar */
+    };
+    .zilla-slab-regular {
+  font-family: "Zilla Slab", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 4rem;
 }
+.color{
+    color: #669bbc;
+}
+
 
 </style>
