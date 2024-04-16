@@ -1,7 +1,7 @@
 <template>
    <div class="container">
       <div class="row justify-content-center">
-         <div class="col-5 bg-white px-3 d-flex flex-column justify-content-evenly rounded-4">
+         <div class="col-12 col-md-5 bg-white px-3 d-flex flex-column justify-content-evenly rounded-4">
             <div class="my-smallest pt-4">
                <h3 class="text-center color mb-4">Analytics</h3>
             </div>
@@ -35,9 +35,11 @@
             <!-- Footer -->
             <section>
                <div class="border-top d-flex justify-content-between align-items-center my-small">
-                  <router-link to="/analytics">Analytics</router-link>
-                  <router-link to="/">Home</router-link>
-                  <a href="">...</a>
+                  <router-link to="/analytics"
+                     ><i class="fa-solid fa-chart-pie fa-lg" style="color: #669bbc"></i
+                  ></router-link>
+                  <router-link to="/"><i class="fa-solid fa-house fa-lg" style="color: #669bbc"></i></router-link>
+                  <a href=""><i class="fa-solid fa-layer-group fa-lg" style="color: #669bbc"></i></a>
                </div>
             </section>
          </div>

@@ -1,7 +1,7 @@
 <template>
    <div class="container">
       <div class="row justify-content-center">
-         <div class="col-5 bg-white px-3 d-flex flex-column justify-content-evenly rounded-4">
+         <div class="col-12 col-md-5 bg-white px-3 d-flex flex-column justify-content-evenly rounded-4">
             <div class="my-smallest pt-4">
                <h3 class="text-center color">Expenses</h3>
             </div>
@@ -22,7 +22,7 @@
                   <div v-for="(expense, index) in todayExpenses" class="d-flex flex-column mb-2">
                      <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex">
-                           <img src="" alt="" />
+                           <!-- <img :src="expense.category.icon" alt="" class="pe-3" /> -->
                            <div>
                               <p class="fw-bold m-0 color">{{ expense.category.name }}</p>
                               <p class="m-0 text-secondary">
@@ -38,7 +38,9 @@
             <!-- Footer -->
             <section>
                <div class="border-top d-flex justify-content-between align-items-center my-small">
-                  <router-link to="/analytics">Analytics</router-link>
+                  <router-link to="/analytics"
+                     ><i class="fa-solid fa-chart-pie fa-lg" style="color: #669bbc"></i
+                  ></router-link>
                   <!-- Modal for adding expenses -->
                   <div
                      class="modal fade"
@@ -102,9 +104,9 @@
                      </div>
                   </div>
                   <button class="btn text-danger fs-4" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">
-                     +
+                     <i class="fa-solid fa-plus" style="color: #669bbc"></i>
                   </button>
-                  <a href="">...</a>
+                  <a href=""><i class="fa-solid fa-layer-group fa-lg" style="color: #669bbc"></i></a>
                </div>
             </section>
          </div>
@@ -289,5 +291,11 @@
 
    .color {
       color: #669bbc;
+   }
+   img {
+      height: 55px;
+      width: 55px;
+      object-fit: contain;
+      object-position: center;
    }
 </style>
