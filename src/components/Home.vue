@@ -8,18 +8,18 @@
             <section class="d-flex flex-column justify-content-center align-items-center my-card">
                <div class="text-center py-5 my-5">
                   <p class="text-secondary fs-5 m-0">Spent this month</p>
-                  <h1 class="text-danger zilla-slab-regular">-{{ totalMonthExpenses }}$</h1>
+                  <h1 class="text-danger zilla-slab-regular">-{{ totalMonthExpenses }}€</h1>
                </div>
             </section>
             <!-- Middle-part -->
             <section class="overflow-auto my-medium">
                <div class="d-flex justify-content-between">
                   <p class="text-secondary">Today</p>
-                  <p class="text-secondary">{{ totalDayExpenses }} $</p>
+                  <p class="text-secondary">{{ totalDayExpenses }}€</p>
                </div>
                <!-- List of expenses -->
                <section>
-                  <div v-for="(expense, index) in todayExpenses" class="d-flex flex-column mb-2">
+                  <div v-for="(expense, index) in todayExpenses" class="d-flex flex-column mb-3">
                      <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex">
                            <!-- <img :src="expense.category.icon" alt="" class="pe-3" /> -->
@@ -30,7 +30,7 @@
                               </p>
                            </div>
                         </div>
-                        <p class="text-danger m-0">{{ expense.amount }} $</p>
+                        <p class="text-danger m-0">{{ expense.amount }}€</p>
                      </div>
                   </div>
                </section>
@@ -38,67 +38,32 @@
             <!-- Footer -->
             <section>
                <div class="border-top d-flex justify-content-between align-items-center my-small">
-                  <router-link to="/analytics"
-                     ><i class="fa-solid fa-chart-pie fa-lg" style="color: #669bbc"></i
-                  ></router-link>
+                  <router-link to="/analytics"><i class="fa-solid fa-chart-pie fa-lg" style="color: #669bbc"></i></router-link>
                   <!-- Modal for adding expenses -->
-                  <div
-                     class="modal fade"
-                     id="exampleModalToggle"
-                     aria-hidden="true"
-                     aria-labelledby="exampleModalToggleLabel"
-                     tabindex="-1"
-                  >
+                  <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
                      <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                            <div class="modal-header">
                               <h1 class="modal-title fs-6" id="exampleModalToggleLabel">
                                  {{ currentDate }}
                               </h1>
-                              <button
-                                 type="button"
-                                 class="btn-close"
-                                 data-bs-dismiss="modal"
-                                 aria-label="Close"
-                              ></button>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                            </div>
                            <div class="modal-body">
                               <div class="mb-3">
                                  <label for="amount" class="mb-1">Amount</label>
-                                 <input
-                                    type="number"
-                                    class="form-control"
-                                    v-model="amount"
-                                    id="amount"
-                                    name="amount"
-                                    value="{{ $expense.amount }}"
-                                    placeholder="0"
-                                 />
+                                 <input type="number" class="form-control" v-model="amount" id="amount" name="amount" value="{{ $expense.amount }}" placeholder="0" />
                               </div>
                               <div class="mb-4">
-                                 <label for="category_id" class="form-label my-text-primary fs-6 my-text-primary"
-                                    >Category</label
-                                 >
-                                 <select
-                                    name="category_id"
-                                    id="category_id"
-                                    v-model="category_id"
-                                    class="form-select p-2"
-                                 >
+                                 <label for="category_id" class="form-label my-text-primary fs-6 my-text-primary">Category</label>
+                                 <select name="category_id" id="category_id" v-model="category_id" class="form-select p-2">
                                     <option selected>Scegli una Categoria</option>
                                     <option v-for="(category, index) in categories" :value="category.id">
                                        {{ category.name }}
                                     </option>
                                  </select>
                               </div>
-                              <button
-                                 class="btn btn-danger"
-                                 data-bs-dismiss="modal"
-                                 aria-label="Close"
-                                 @click="addExpense"
-                              >
-                                 Add Expense
-                              </button>
+                              <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" @click="addExpense">Add Expense</button>
                            </div>
                         </div>
                      </div>
@@ -106,7 +71,7 @@
                   <button class="btn text-danger fs-4" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">
                      <i class="fa-solid fa-plus" style="color: #669bbc"></i>
                   </button>
-                  <a href=""><i class="fa-solid fa-layer-group fa-lg" style="color: #669bbc"></i></a>
+                  <router-link to="/transactions"><i class="fa-solid fa-layer-group fa-lg" style="color: #669bbc"></i></router-link>
                </div>
             </section>
          </div>
@@ -167,10 +132,13 @@
                .then((response) => {
                   console.log(response.data.results);
                   this.expenses = response.data.results;
-                  this.todayExpenses = this.todayExpenses = this.expenses.filter((expense) =>
-                     this.isToday(expense.created_at)
-                  );
+                  this.todayExpenses = this.todayExpenses = this.expenses.filter((expense) => this.isToday(expense.created_at));
                   console.log(this.todayExpenses);
+                  this.todayExpenses.sort((a, b) => {
+                     const dateA = new Date(a.created_at);
+                     const dateB = new Date(b.created_at);
+                     return dateB - dateA;
+                  });
                })
                .catch(function (error) {
                   console.log(error);
@@ -230,23 +198,8 @@
       mounted() {
          // Update current date when the component is mounted
          const currentDate = new Date();
-         const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][
-            currentDate.getDay()
-         ];
-         const monthNames = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-         ];
+         const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()];
+         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
          const month = monthNames[currentDate.getMonth()];
          const day = currentDate.getDate();
          const year = currentDate.getFullYear();

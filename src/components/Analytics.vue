@@ -1,7 +1,7 @@
 <template>
    <div class="container">
       <div class="row justify-content-center">
-         <div class="col-12 col-md-5 bg-white px-3 d-flex flex-column justify-content-evenly rounded-4">
+         <div class="col-12 col-md-5 bg-white px-3 d-flex flex-column justify-content-evenl rounded-4">
             <div class="my-smallest pt-4">
                <h3 class="text-center color mb-4">Analytics</h3>
             </div>
@@ -9,7 +9,7 @@
                <canvas id="expenseChart" width="500" height="250"></canvas>
                <div class="text-center my-4">
                   <p class="text-secondary fs-5 m-0">Spent this month</p>
-                  <h1 class="text-danger zilla-slab-regular">-{{ totalMonthExpenses }}$</h1>
+                  <h1 class="text-danger zilla-slab-regular">-{{ totalMonthExpenses }}€</h1>
                </div>
             </section>
             <!-- Middle-part -->
@@ -20,26 +20,20 @@
                </div>
                <!-- List of expenses by category -->
                <section>
-                  <div
-                     v-for="(categoryTotal, categoryName) in totalExpensesByCategory"
-                     :key="categoryName"
-                     class="d-flex justify-content-between py-3"
-                  >
+                  <div v-for="(categoryTotal, categoryName) in totalExpensesByCategory" :key="categoryName" class="d-flex justify-content-between py-3">
                      <div>
                         <p class="fw-bold m-0 color">{{ categoryName }}</p>
                      </div>
-                     <p class="text-danger m-0">{{ categoryTotal }} $</p>
+                     <p class="text-danger m-0">{{ categoryTotal }}€</p>
                   </div>
                </section>
             </section>
             <!-- Footer -->
             <section>
                <div class="border-top d-flex justify-content-between align-items-center my-small">
-                  <router-link to="/analytics"
-                     ><i class="fa-solid fa-chart-pie fa-lg" style="color: #669bbc"></i
-                  ></router-link>
+                  <router-link to="/analytics"><i class="fa-solid fa-chart-pie fa-lg" style="color: #669bbc"></i></router-link>
                   <router-link to="/"><i class="fa-solid fa-house fa-lg" style="color: #669bbc"></i></router-link>
-                  <a href=""><i class="fa-solid fa-layer-group fa-lg" style="color: #669bbc"></i></a>
+                  <router-link to="/transactions"><i class="fa-solid fa-layer-group fa-lg" style="color: #669bbc"></i></router-link>
                </div>
             </section>
          </div>
@@ -52,7 +46,7 @@
    import Chart from "chart.js/auto";
 
    export default {
-      name: "Home",
+      name: "Analytics",
       data() {
          return {
             expenses: [],
@@ -166,10 +160,7 @@
                const currentMonthExpenses = expenses.filter((expense) => {
                   const expenseDate = new Date(expense.created_at);
                   const currentDate = new Date();
-                  return (
-                     expenseDate.getMonth() === currentDate.getMonth() &&
-                     expenseDate.getFullYear() === currentDate.getFullYear()
-                  );
+                  return expenseDate.getMonth() === currentDate.getMonth() && expenseDate.getFullYear() === currentDate.getFullYear();
                });
 
                // Group expenses by day
@@ -191,23 +182,8 @@
                console.log(error);
             });
 
-         const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][
-            currentDate.getDay()
-         ];
-         const monthNames = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-         ];
+         const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][currentDate.getDay()];
+         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
          const month = monthNames[currentDate.getMonth()];
          const day = currentDate.getDate();
          const year = currentDate.getFullYear();
