@@ -8,11 +8,13 @@
 <script>
    import Analytics from "./components/Analytics.vue";
    import Home from "./components/Home.vue";
+   import Transactions from "./components/Transactions.vue";
    export default {
       name: "App",
       components: {
          Home,
          Analytics,
+         Transactions,
       },
       data() {
          return {};
