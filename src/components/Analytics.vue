@@ -73,7 +73,16 @@
                const categoryName = expense.category.name;
                totalByCategory[categoryName] = (totalByCategory[categoryName] || 0) + parseFloat(expense.amount);
             });
-            return totalByCategory;
+            // Convert object into an array of key-value pairs
+            const sortedCategories = Object.entries(totalByCategory);
+
+            // Sort the array based on the value (amount), with the highest amount staying at the top
+            sortedCategories.sort((a, b) => b[1] - a[1]);
+
+            // Convert the sorted array back into an object
+            const sortedTotalByCategory = Object.fromEntries(sortedCategories);
+
+            return sortedTotalByCategory;
          },
       },
       methods: {
